@@ -1,0 +1,41 @@
+/* MCT mark — metallic asset reads best with soft rim light on #0b080c */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.brand-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(194, 164, 255, 0.22))
+    drop-shadow(0 0 42px rgba(170, 66, 255, 0.12));
+  transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+a:hover .brand-logo img,
+.brand-logo--hero:hover img {
+  filter: drop-shadow(0 0 20px rgba(194, 164, 255, 0.35))
+    drop-shadow(0 0 56px rgba(170, 66, 255, 0.2));
+}
+
+/* Navbar — compact, sharp */
+.brand-logo--navbar img {
+  width: clamp(38px, 4.2vw, 52px);
+  max-height: 44px;
+}
+
+/* Hero — premium scale */
+.brand-logo--hero img {
+  width: clamp(72px, 10vw, 120px);
+  max-height: none;
+}
+
+/* Loader header */
+.brand-logo--loader img {
+  width: clamp(40px, 5vw, 56px);
+}

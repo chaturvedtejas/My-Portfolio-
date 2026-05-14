@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HoverLinks from "./HoverLinks";
+import BrandLogo from "./BrandLogo";
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
 import "./styles/Navbar.css";
@@ -23,14 +24,14 @@ const Navbar = () => {
     smoother.scrollTop(0);
     smoother.paused(true);
 
-    let links = document.querySelectorAll(".header ul a");
+    const links = document.querySelectorAll(".header ul a");
     links.forEach((elem) => {
-      let element = elem as HTMLAnchorElement;
+      const element = elem as HTMLAnchorElement;
       element.addEventListener("click", (e) => {
-        if (window.innerWidth > 1024) {
+        if (window.matchMedia("(min-width: 1025px)").matches) {
           e.preventDefault();
-          let elem = e.currentTarget as HTMLAnchorElement;
-          let section = elem.getAttribute("data-href");
+          const elem = e.currentTarget as HTMLAnchorElement;
+          const section = elem.getAttribute("data-href");
           smoother.scrollTo(section, true, "top top");
         }
       });
@@ -42,15 +43,20 @@ const Navbar = () => {
   return (
     <>
       <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
-          Logo
+        <a
+          href="/#"
+          className="navbar-brand"
+          aria-label="MCT — home"
+          data-cursor="disable"
+        >
+          <BrandLogo variant="navbar" />
         </a>
         <a
-          href="mailto:example@mail.com"
+          href="mailto:chaturvedtejasmarati22@gmail.com"
           className="navbar-connect"
           data-cursor="disable"
         >
-          example@mail.com
+          chaturvedtejasmarati22@gmail.com
         </a>
         <ul>
           <li>
