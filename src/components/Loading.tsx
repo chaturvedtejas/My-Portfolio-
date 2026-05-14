@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState } from "react";
 import "./styles/Loading.css";
-import { useLoading } from "../context/LoadingProvider";
+import { useLoading } from "../context/loadingContext";
 
 import Marquee from "react-fast-marquee";
 
@@ -10,30 +10,45 @@ const Loading = ({ percent }: { percent: number }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
 
-  if (percent >= 100) {
-    setTimeout(() => {
+  useEffect(() => {
+    if (percent < 100) return;
+    const timer1 = window.setTimeout(() => {
       setLoaded(true);
-      setTimeout(() => {
+      timer2 = window.setTimeout(() => {
         setIsLoaded(true);
       }, 1000);
     }, 600);
-  }
+    let timer2: number | undefined;
+
+    return () => {
+      if (timer1 !== undefined) window.clearTimeout(timer1);
+      if (timer2 !== undefined) window.clearTimeout(timer2);
+    };
+  }, [percent]);
 
   useEffect(() => {
-    import("./utils/initialFX").then((module) => {
-      if (isLoaded) {
-        setClicked(true);
-        setTimeout(() => {
-          if (module.initialFX) {
-            module.initialFX();
-          }
-          setIsLoading(false);
-        }, 900);
-      }
-    });
-  }, [isLoaded]);
+    if (!isLoaded) return;
+    let active = true;
+    let timer: number | undefined;
 
-  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
+    import("./utils/initialFX").then((module) => {
+      if (!active) return;
+      setClicked(true);
+      timer = window.setTimeout(() => {
+        if (module.initialFX) {
+          module.initialFX();
+        }
+        setIsLoading(false);
+      }, 900);
+    });
+
+    return () => {
+      active = false;
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, [isLoaded, setIsLoading]);
+
+  function handleMouseMove(e: MouseEvent<HTMLElement>) {
     const { currentTarget: target } = e;
     const rect = target.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -91,45 +106,3 @@ const Loading = ({ percent }: { percent: number }) => {
 };
 
 export default Loading;
-
-export const setProgress = (setLoading: (value: number) => void) => {
-  let percent: number = 0;
-
-  let interval = setInterval(() => {
-    if (percent <= 50) {
-      const rand = Math.round(Math.random() * 5);
-      percent = percent + rand;
-      setLoading(percent);
-    } else {
-      clearInterval(interval);
-      interval = setInterval(() => {
-        percent = percent + Math.round(Math.random());
-        setLoading(percent);
-        if (percent > 91) {
-          clearInterval(interval);
-        }
-      }, 2000);
-    }
-  }, 100);
-
-  function clear() {
-    clearInterval(interval);
-    setLoading(100);
-  }
-
-  function loaded() {
-    return new Promise<number>((resolve) => {
-      clearInterval(interval);
-      interval = setInterval(() => {
-        if (percent < 100) {
-          percent++;
-          setLoading(percent);
-        } else {
-          resolve(percent);
-          clearInterval(interval);
-        }
-      }, 2);
-    });
-  }
-  return { loaded, percent, clear };
-};

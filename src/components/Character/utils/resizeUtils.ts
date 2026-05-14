@@ -6,7 +6,7 @@ export default function handleResize(
   renderer: THREE.WebGLRenderer,
   camera: THREE.PerspectiveCamera,
   canvasDiv: React.RefObject<HTMLDivElement>,
-  character: THREE.Object3D
+  character: THREE.Object3D | null
 ) {
   if (!canvasDiv.current) return;
   const canvas3d = canvasDiv.current.getBoundingClientRect();
@@ -21,6 +21,8 @@ export default function handleResize(
       trigger.kill();
     }
   });
-  setCharTimeline(character, camera);
+  if (character) {
+    setCharTimeline(character, camera);
+  }
   setAllTimeline();
 }
