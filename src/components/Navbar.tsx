@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
 import BrandLogo from "./BrandLogo";
-import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { smoother } from "./utils/gsapSmoother";
 import "./styles/Navbar.css";
 
